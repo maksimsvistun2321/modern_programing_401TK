@@ -16,5 +16,23 @@
                 _stockItems.Add(new StockItem(product, 0));
             }
         }
+
+        public void ReceiveStock(Product product, int quantity)
+        {
+            var item = _stockItems.First(item => item.Product.Equals(product));
+
+            IStockOperation operation = new ReceiptOperation();
+
+            _movements.Add(operation.Execute(item, quantity));
+        }
+
+        public void IssueStock(Product product, int quantity)
+        {
+            var item = _stockItems.First(item => item.Product.Equals(product));
+
+            IStockOperation operation = new IssueOperation();
+
+            _movements.Add(operation.Execute(item, quantity));
+        }
     }
 }
