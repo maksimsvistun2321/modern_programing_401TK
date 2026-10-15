@@ -1,4 +1,6 @@
-﻿namespace InventoryManagement.Domain
+﻿using InventoryManagement.Domain.Enums;
+
+namespace InventoryManagement.Domain
 {
     public class StockMovement
     {
@@ -23,11 +25,5 @@
         {
             return $"[{Timestamp:yyyy-MM-dd HH:mm:ss}] {Type}: {Product.Name} x{Quantity}";
         }
-    }
-
-    public enum MovementType
-    {
-        Receipt,
-        Issue
     }
 }

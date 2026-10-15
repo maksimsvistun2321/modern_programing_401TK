@@ -1,4 +1,7 @@
-﻿namespace InventoryManagement.Domain
+﻿using InventoryManagement.Domain.Interfaces;
+using InventoryManagement.Domain.Enums;
+
+namespace InventoryManagement.Domain
 {
     public class ReceiptOperation: IStockOperation
     {
