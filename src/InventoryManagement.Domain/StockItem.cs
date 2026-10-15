@@ -7,6 +7,7 @@ namespace InventoryManagement.Domain
         public Guid Id { get; }
         public Product Product { get; }
         public int Quantity { get; private set; }
+        public StockStatus Status { get; private set; }
         public StorageLocation? Location { get; private set; }
 
         public StockItem(Product product, int quantity)
@@ -16,6 +17,8 @@ namespace InventoryManagement.Domain
             Id = Guid.NewGuid();
             Product = product;
             Quantity = quantity;
+
+            SetStockStatus();
         }
 
         public void IncreaseQuantity(int amount)
@@ -24,6 +27,8 @@ namespace InventoryManagement.Domain
                 throw new ArgumentException("Amount can't be negative");
 
             Quantity += amount;
+
+            SetStockStatus();
         }
 
         public void DecreaseQuantity(int amount)
@@ -34,6 +39,8 @@ namespace InventoryManagement.Domain
             if (amount > Quantity)
                 throw new InvalidOperationException($"We are out of stock of '{Product.Name}'");
             Quantity -= amount;
+
+            SetStockStatus();
         }
 
         public void AddStorageLocation(StorageLocation location)
@@ -42,5 +49,25 @@ namespace InventoryManagement.Domain
                 throw new ArgumentNullException($"Location can't be null");
             Location = location;
         }
+
+        private StockStatus SetStockStatus() =>
+            Quantity switch
+            {
+                0 => Status = StockStatus.OutOfStock,
+                >= 1 and <= 5 => Status = StockStatus.LowStock,
+                >= 6 and <= 100 => Status =  StockStatus.Normal,
+                > 100 => Status = StockStatus.Overstock,
+                _ => throw new ArgumentOutOfRangeException($"Not expected negative quantity: {Quantity}"),
+            };
+
+        public string GetStockStatusDescription() =>
+            Status switch 
+            { 
+                StockStatus.OutOfStock => $"Item {Product.Name} is out of stock.",
+                StockStatus.LowStock => $"Item {Product.Name} is low stock.",
+                StockStatus.Normal => $"Item {Product.Name} is normal stock.",
+                StockStatus.Overstock => $"Item {Product.Name} is overstock.",
+                _ => throw new ArgumentOutOfRangeException($"Not expected stock status: {Status}"),
+            };
     }
 }
