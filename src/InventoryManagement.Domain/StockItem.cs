@@ -43,11 +43,9 @@ namespace InventoryManagement.Domain
             SetStockStatus();
         }
 
-        public void AddStorageLocation(StorageLocation location)
+        public void AddStorageLocation(string zone, int aisle, string shelf, int level, int cell)
         {
-            if (location == null)
-                throw new ArgumentNullException($"Location can't be null");
-            Location = location;
+            Location = new StorageLocation(zone, aisle, shelf, level, cell);
         }
 
         private StockStatus SetStockStatus() =>

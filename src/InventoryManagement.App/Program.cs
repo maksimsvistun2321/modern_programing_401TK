@@ -9,8 +9,7 @@ warehouse.ReceiveStock(laptop, 10);
 
 var laptopItem = warehouse.StockItems.First(x => x.Product.Equals(laptop));
 
-StorageLocation location = new("PICK",2,"A",2,34);
-laptopItem.AddStorageLocation(location);
+laptopItem.AddStorageLocation("PICK", 2, "A", 2, 34);
 
 Console.WriteLine($"{laptopItem.Product.Name} is stored in {laptopItem.Location}");
 
