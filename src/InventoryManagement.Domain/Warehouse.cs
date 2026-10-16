@@ -1,4 +1,6 @@
-﻿namespace InventoryManagement.Domain
+﻿using InventoryManagement.Domain.Interfaces;
+
+namespace InventoryManagement.Domain
 {
     public class Warehouse
     {

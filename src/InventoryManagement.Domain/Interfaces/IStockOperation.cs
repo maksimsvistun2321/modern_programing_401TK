@@ -1,4 +1,4 @@
-﻿namespace InventoryManagement.Domain
+﻿namespace InventoryManagement.Domain.Interfaces
 {
     public interface IStockOperation
     {
