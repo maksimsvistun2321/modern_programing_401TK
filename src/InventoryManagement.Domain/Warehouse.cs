@@ -15,7 +15,7 @@ namespace InventoryManagement.Domain
             var existingItem = _stockItems.FirstOrDefault(item => item.Product.Equals(product));
             if (existingItem == null)
             {
-                _stockItems.Add(new StockItem(product, 0));
+                _stockItems.Add(new StockItem(product, 0, 0));
             }
         }
 
