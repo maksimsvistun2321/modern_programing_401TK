@@ -139,13 +139,8 @@ var receiptList = warehouse.Movements
     .Select(x => x.Product.Name)
     .ToList();
 
-foreach(var item in receiptList)
-{
-    if (!issueList.Contains(item)) 
-    {
-        Console.WriteLine(item);
-    }
-}
+Console.WriteLine(string.Join("\n", receiptList.Except(issueList)));
+
 
 Console.WriteLine("\nTask 9");
 var task9 = stockItemsList
