@@ -7,16 +7,18 @@ namespace InventoryManagement.Domain
         public Guid Id { get; }
         public Product Product { get; }
         public int Quantity { get; private set; }
+        public int Price { get; private set; }
         public StockStatus Status { get; private set; }
         public StorageLocation? Location { get; private set; }
 
-        public StockItem(Product product, int quantity)
+        public StockItem(Product product, int quantity, int price)
         {
             if (quantity < 0)
                 throw new ArgumentException("Quantity can't be negative");
             Id = Guid.NewGuid();
             Product = product;
             Quantity = quantity;
+            Price = price;
 
             SetStockStatus();
         }
@@ -46,6 +48,14 @@ namespace InventoryManagement.Domain
         public void AddStorageLocation(string zone, int aisle, string shelf, int level, int cell)
         {
             Location = new StorageLocation(zone, aisle, shelf, level, cell);
+        }
+
+        public void UpdatePrice(int price)
+        {
+            if (price < 0)
+                throw new ArgumentException("Price can't be negative");
+
+            Price = price;
         }
 
         private StockStatus SetStockStatus() =>
