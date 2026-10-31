@@ -2,16 +2,19 @@
 
 namespace InventoryManagement.Domain
 {
+
     public class StockItem
     {
         public Guid Id { get; }
         public Product Product { get; }
         public int Quantity { get; private set; }
-        public int Price { get; private set; }
+        public decimal Price { get; private set; }
         public StockStatus Status { get; private set; }
         public StorageLocation? Location { get; private set; }
 
-        public StockItem(Product product, int quantity, int price)
+        public event Action<StockItem>? StockLevelChanged;
+        
+        public StockItem(Product product, int quantity, decimal price)
         {
             if (quantity < 0)
                 throw new ArgumentException("Quantity can't be negative");
@@ -31,6 +34,8 @@ namespace InventoryManagement.Domain
             Quantity += amount;
 
             SetStockStatus();
+
+            StockLevelChanged?.Invoke(this);
         }
 
         public void DecreaseQuantity(int amount)
@@ -43,6 +48,8 @@ namespace InventoryManagement.Domain
             Quantity -= amount;
 
             SetStockStatus();
+
+            StockLevelChanged?.Invoke(this);
         }
 
         public void AddStorageLocation(string zone, int aisle, string shelf, int level, int cell)
@@ -50,7 +57,7 @@ namespace InventoryManagement.Domain
             Location = new StorageLocation(zone, aisle, shelf, level, cell);
         }
 
-        public void UpdatePrice(int price)
+        public void UpdatePrice(decimal price)
         {
             if (price < 0)
                 throw new ArgumentException("Price can't be negative");
