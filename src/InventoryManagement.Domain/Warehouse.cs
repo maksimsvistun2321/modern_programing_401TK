@@ -28,8 +28,8 @@ namespace InventoryManagement.Domain
 
         public void ReceiveStock(Product product, int quantity)
         {
-            if (quantity <= 0)
-                throw new ArgumentOutOfRangeException("Quantity must be greater than zero");
+            if (quantity < 0)
+                throw new ArgumentOutOfRangeException("Quantity can't be negative");
 
             var item = _stockItems.First(item => item.Product.Equals(product));
             
@@ -43,8 +43,8 @@ namespace InventoryManagement.Domain
 
         public void IssueStock(Product product, int quantity)
         {
-            if (quantity <= 0)
-                throw new ArgumentOutOfRangeException("Quantity must be greater than zero");
+            if (quantity < 0)
+                throw new ArgumentOutOfRangeException("Quantity can't be negative");
 
             var item = _stockItems.First(item => item.Product.Equals(product));
 
