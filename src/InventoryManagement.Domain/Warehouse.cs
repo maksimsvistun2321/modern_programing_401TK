@@ -12,16 +12,29 @@ namespace InventoryManagement.Domain
 
         public void AddProduct(Product product)
         {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (string.IsNullOrWhiteSpace(product.SKU))
+                throw new ArgumentException("SKU cannot be empty");
+
             var existingItem = _stockItems.FirstOrDefault(item => item.Product.Equals(product));
-            if (existingItem == null)
-            {
-                _stockItems.Add(new StockItem(product, 0, 0));
-            }
+
+            if (existingItem != null)
+                throw new InvalidOperationException("Item already exists");
+
+            _stockItems.Add(new StockItem(product, 0, 0));
         }
 
         public void ReceiveStock(Product product, int quantity)
         {
+            if (quantity <= 0)
+                throw new ArgumentOutOfRangeException("Quantity must be greater than zero");
+
             var item = _stockItems.First(item => item.Product.Equals(product));
+            
+            if (item == null)
+                throw new InvalidOperationException("Product does not exist");
 
             IStockOperation operation = new ReceiptOperation();
 
@@ -30,7 +43,13 @@ namespace InventoryManagement.Domain
 
         public void IssueStock(Product product, int quantity)
         {
+            if (quantity <= 0)
+                throw new ArgumentOutOfRangeException("Quantity must be greater than zero");
+
             var item = _stockItems.First(item => item.Product.Equals(product));
+
+            if (item == null)
+                throw new InvalidOperationException("Product does not exist");
 
             IStockOperation operation = new IssueOperation();
 
