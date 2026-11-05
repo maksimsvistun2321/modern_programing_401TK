@@ -12,7 +12,10 @@ namespace InventoryManagement.Domain
 
         public StockMovement(Product product, int quantity, MovementType type)
         {
-            if (quantity < 0) throw new ArgumentException("Quantity can't be negative!");
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+            if (quantity < 0) 
+                throw new ArgumentOutOfRangeException("Quantity can't be negative!");
 
             Id = Guid.NewGuid();
             Timestamp = DateTime.UtcNow;

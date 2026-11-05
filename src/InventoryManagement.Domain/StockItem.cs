@@ -16,8 +16,11 @@ namespace InventoryManagement.Domain
         
         public StockItem(Product product, int quantity, decimal price)
         {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
             if (quantity < 0)
-                throw new ArgumentException("Quantity can't be negative");
+                throw new ArgumentOutOfRangeException("Quantity can't be negative");
+
             Id = Guid.NewGuid();
             Product = product;
             Quantity = quantity;
@@ -29,7 +32,7 @@ namespace InventoryManagement.Domain
         public void IncreaseQuantity(int amount)
         {
             if (amount < 0)
-                throw new ArgumentException("Amount can't be negative");
+                throw new ArgumentOutOfRangeException("Amount can't be negative");
 
             Quantity += amount;
 
@@ -41,10 +44,10 @@ namespace InventoryManagement.Domain
         public void DecreaseQuantity(int amount)
         {
             if (amount < 0)
-                throw new ArgumentException("Amount can't be negative");
-
+                throw new ArgumentOutOfRangeException("Amount can't be negative");
             if (amount > Quantity)
                 throw new InvalidOperationException($"We are out of stock of '{Product.Name}'");
+
             Quantity -= amount;
 
             SetStockStatus();
