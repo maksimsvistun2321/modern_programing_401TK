@@ -46,37 +46,38 @@ for (int i = 0; i < amount_of_products; i++)
 }
 #endregion
 
-string configFile = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
-
-var config = new ConfigurationBuilder()
-    .AddJsonFile(configFile, optional: false)
-    .Build();
-
-string relativepath = config["Storage:FilePath"] ?? throw new InvalidOperationException("Storage:FilePath is not configured.");
-
-string filePath = Path.Combine(AppContext.BaseDirectory, relativepath);
-
-Func<StockItem, decimal> StockValue = StockItem => StockItem.Quantity * StockItem.Price;
-
-List<StockReport> report = [];
-
-foreach (var item in stockItems)
-{
-    report.Add(new StockReport(item.Product.SKU, item.Product.Name, item.Location.Zone, item.Quantity, StockValue(item)));
-}
-
-var options = new JsonSerializerOptions
-{
-    WriteIndented = config.GetValue<bool?>("Storage:WriteIndented") ?? throw new InvalidOperationException("Storage:WriteIndented is not configured.")
-};
-
-string json = JsonSerializer.Serialize(report, options);
-
-Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
-await File.WriteAllTextAsync(filePath, json);
-
+string filePath = "";
 try
 {
+    string configFile = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
+
+    var config = new ConfigurationBuilder()
+        .AddJsonFile(configFile, optional: false)
+        .Build();
+
+    string relativepath = config["Storage:FilePath"] ?? throw new InvalidOperationException("Storage:FilePath is not configured.");
+
+    filePath = Path.Combine(AppContext.BaseDirectory, relativepath);
+
+    Func<StockItem, decimal> StockValue = StockItem => StockItem.Quantity * StockItem.Price;
+
+    List<StockReport> report = [];
+
+    foreach (var item in stockItems)
+    {
+        report.Add(new StockReport(item.Product.SKU, item.Product.Name, item.Location.Zone, item.Quantity, StockValue(item)));
+    }
+
+    var options = new JsonSerializerOptions
+    {
+        WriteIndented = config.GetValue<bool?>("Storage:WriteIndented") ?? throw new InvalidOperationException("Storage:WriteIndented is not configured.")
+    };
+
+    string json = JsonSerializer.Serialize(report, options);
+
+    Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+    await File.WriteAllTextAsync(filePath, json);
+
     string savedJson = await File.ReadAllTextAsync(filePath);
     var deserealized = JsonSerializer.Deserialize<List<StockReport>>(savedJson);
     decimal totalPrice = 0;
@@ -87,6 +88,10 @@ try
     }
 
     Console.WriteLine($"\nTotal price: {totalPrice}");
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine(ex.Message);
 }
 catch (FileNotFoundException)
 {
