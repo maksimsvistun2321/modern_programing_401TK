@@ -31,8 +31,8 @@ namespace InventoryManagement.Domain
 
         public void IncreaseQuantity(int amount)
         {
-            if (amount < 0)
-                throw new ArgumentOutOfRangeException("Amount can't be negative");
+            if (amount <= 0)
+                throw new ArgumentOutOfRangeException("Amount must be positive");
 
             Quantity += amount;
 
@@ -43,8 +43,8 @@ namespace InventoryManagement.Domain
 
         public void DecreaseQuantity(int amount)
         {
-            if (amount < 0)
-                throw new ArgumentOutOfRangeException("Amount can't be negative");
+            if (amount <= 0)
+                throw new ArgumentOutOfRangeException("Amount must be positive");
             if (amount > Quantity)
                 throw new InvalidOperationException($"We are out of stock of '{Product.Name}'");
 

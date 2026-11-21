@@ -3,4 +3,7 @@
     <Project Path="src/InventoryManagement.App/InventoryManagement.App.csproj" />
     <Project Path="src/InventoryManagement.Domain/InventoryManagement.Domain.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/InventoryManagment.Tests/InventoryManagment.Tests.csproj" />
+  </Folder>
 </Solution>
