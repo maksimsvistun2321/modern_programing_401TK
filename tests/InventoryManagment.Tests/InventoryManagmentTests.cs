@@ -1,4 +1,6 @@
 ﻿using InventoryManagement.Domain;
+using InventoryManagement.Domain.Services;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace InventoryManagment.Tests;
 
@@ -87,5 +89,66 @@ public class InventoryManagmentTests
 
         Assert.Equal(1, firstSubscriber);
         Assert.Equal(1, secondSubscriber);
+    }
+
+    [Fact]
+    public void IssueStock_SuccessfulOperation_SendsNotificationOnce()
+    {
+        var notifier = new InMemoryStockNotifier();
+        var service = new StockApplicationService(
+            notifier,
+            NullLogger<StockApplicationService>.Instance);
+
+        var warehouse = new Warehouse();
+        var product = new Product() { Name = "Laptop", SKU = "LAP-BLK-512GB" };
+
+        warehouse.AddProduct(product);
+        warehouse.ReceiveStock(product, 10);
+
+        service.IssueStock(warehouse, product, 4);
+
+        Assert.Single(notifier.Notifications);
+    }
+
+    [Fact]
+    public void IssueStock_InsufficientStock_DoesNotSendNotificationAndKeepsQuantity()
+    {
+        var notifier = new InMemoryStockNotifier();
+        var service = new StockApplicationService(
+            notifier,
+            NullLogger<StockApplicationService>.Instance);
+
+        var warehouse = new Warehouse();
+        var product = new Product() { Name = "Laptop", SKU = "LAP-BLK-512GB" };
+
+        warehouse.AddProduct(product);
+        warehouse.ReceiveStock(product, 10);
+
+        service.IssueStock(warehouse, product, 15);
+
+        Assert.Empty(notifier.Notifications);
+        var stockItem = warehouse.StockItems.Single(item => item.Product.Equals(product));
+        Assert.Equal(10, stockItem.Quantity);
+    }
+
+    [Fact]
+    public void IssueStock_FailedThenSuccess_SendsNotificationOnlyForSuccessfulOperation()
+    {
+        var notifier = new InMemoryStockNotifier();
+        var service = new StockApplicationService(
+            notifier,
+            NullLogger<StockApplicationService>.Instance);
+
+        var warehouse = new Warehouse();
+        var product = new Product() { Name = "Laptop", SKU = "LAP-BLK-512GB" };
+
+        warehouse.AddProduct(product);
+        warehouse.ReceiveStock(product, 10);
+
+        service.IssueStock(warehouse, product, 20);
+        Assert.Empty(notifier.Notifications);
+
+        service.IssueStock(warehouse, product, 3);
+        Assert.Single(notifier.Notifications);
     }
 }
