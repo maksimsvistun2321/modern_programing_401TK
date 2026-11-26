@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="InventoryManagement.Api/InventoryManagement.Api.csproj" Id="9c0c8b21-2e33-486b-b2d8-6d264f28e991" />
     <Project Path="src/InventoryManagement.App/InventoryManagement.App.csproj" />
     <Project Path="src/InventoryManagement.Domain/InventoryManagement.Domain.csproj" />
   </Folder>
