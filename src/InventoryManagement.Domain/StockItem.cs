@@ -1,9 +1,10 @@
 ﻿using InventoryManagement.Domain.Enums;
+using InventoryManagement.Domain.Interfaces;
 
 namespace InventoryManagement.Domain
 {
 
-    public class StockItem
+    public class StockItem : IEntity
     {
         public Guid Id { get; }
         public Product Product { get; }

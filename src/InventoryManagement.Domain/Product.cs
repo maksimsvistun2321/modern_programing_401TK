@@ -1,6 +1,8 @@
-﻿namespace InventoryManagement.Domain
+﻿using InventoryManagement.Domain.Interfaces;
+
+namespace InventoryManagement.Domain
 {
-    public class Product
+    public class Product : IEntity
     {
         public Guid Id { get; }
         public required string Name { get; init; }
