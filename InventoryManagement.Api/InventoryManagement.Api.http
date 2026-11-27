@@ -1,0 +1,11 @@
+@InventoryManagement.Api_HostAddress = https://localhost:7244
+
+
+
+POST {{InventoryManagement.Api_HostAddress}}/stock-items
+
+###
+
+GET {{InventoryManagement.Api_HostAddress}}/stock-items
+
+###
